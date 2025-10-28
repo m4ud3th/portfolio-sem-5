@@ -1,0 +1,3 @@
+- [x] Project scaffolded with Next.js, TypeScript, Tailwind CSS, ESLint, App Router, and src directory using npm.
+- [ ] Customize the project for portfolio content.
+- [ ] Ensure documentation is complete.
