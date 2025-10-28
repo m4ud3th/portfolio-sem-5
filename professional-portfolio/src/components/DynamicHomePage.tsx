@@ -45,7 +45,7 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
       <div className="pointer-events-none fixed inset-0 z-0 opacity-10 mix-blend-overlay" style={{backgroundImage: 'url(https://www.transparenttextures.com/patterns/diamond-upholstery.png), url(https://www.transparenttextures.com/patterns/grunge-wall.png)'}} />
       
       {/* Bold Band-style Header */}
-      <header className="w-full bg-black/90 flex items-center justify-between px-8 py-6 border-b-2 border-[#232842] z-20 relative shadow-xl uppercase tracking-widest">
+      <header className="w-full bg-black/90 flex items-center justify-between px-8 py-6 border-b-2 border-[#232842] z-20 relative shadow-xl tracking-widest">
         <div className="flex items-center">
           <HomeNavButton />
         </div>
@@ -56,12 +56,6 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
             className="text-white bg-transparent rounded px-5 py-2 font-bold text-lg hover:text-[#6a5cff] hover:bg-[#232842]/30 transition-colors duration-200 shadow-sm tracking-wide cursor-pointer"
           >
             Contact
-          </a>
-          <a
-            href="/auth/login"
-            className="text-white bg-transparent rounded px-5 py-2 font-bold text-lg hover:text-[#6a5cff] hover:bg-[#232842]/30 transition-colors duration-200 shadow-sm tracking-wide cursor-pointer"
-          >
-            Admin
           </a>
         </nav>
       </header>
@@ -169,7 +163,15 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
 
       {/* Footer */}
       <footer className="w-full py-8 bg-black/90 text-center text-gray-400 text-base border-t-2 border-[#232842]/40 mt-16 relative z-10 rounded-t-xl shadow-lg backdrop-blur-md tracking-widest uppercase">
-        &copy; {new Date().getFullYear()} Maud Kusters. All rights reserved.
+        <div className="flex flex-col items-center gap-2">
+          <div>&copy; {new Date().getFullYear()} Maud Kusters. All rights reserved.</div>
+          <a
+            href="/auth/login"
+            className="text-gray-500 hover:text-[#6a5cff] text-xs transition-colors duration-200 cursor-pointer"
+          >
+            Admin
+          </a>
+        </div>
       </footer>
     </div>
   );
