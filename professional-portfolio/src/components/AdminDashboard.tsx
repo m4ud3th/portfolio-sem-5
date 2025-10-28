@@ -246,27 +246,30 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Image URL</label>
                   <input
-                    type="url"
+                    type="text"
                     value={formData.image_url}
                     onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                    placeholder="/images/project.png or https://example.com/image.jpg"
                     className="w-full px-4 py-3 bg-[#232842]/30 border border-[#232842] rounded-lg text-white placeholder-gray-400 focus:border-[#6a5cff] focus:outline-none"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Project URL</label>
                   <input
-                    type="url"
+                    type="text"
                     value={formData.project_url}
                     onChange={(e) => setFormData({...formData, project_url: e.target.value})}
+                    placeholder="https://example.com or leave empty"
                     className="w-full px-4 py-3 bg-[#232842]/30 border border-[#232842] rounded-lg text-white placeholder-gray-400 focus:border-[#6a5cff] focus:outline-none"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">GitHub URL</label>
                   <input
-                    type="url"
+                    type="text"
                     value={formData.github_url}
                     onChange={(e) => setFormData({...formData, github_url: e.target.value})}
+                    placeholder="https://github.com/username/repo or leave empty"
                     className="w-full px-4 py-3 bg-[#232842]/30 border border-[#232842] rounded-lg text-white placeholder-gray-400 focus:border-[#6a5cff] focus:outline-none"
                   />
                 </div>
