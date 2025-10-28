@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import AuthAwareAdminLink from './AuthAwareAdminLink';
 import type { Database } from '@/lib/types/database.types';
 
 type Project = Database['public']['Tables']['projects']['Row'];
@@ -165,12 +166,7 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
       <footer className="w-full py-8 bg-black/90 text-center text-gray-400 text-base border-t-2 border-[#232842]/40 mt-16 relative z-10 rounded-t-xl shadow-lg backdrop-blur-md tracking-widest uppercase">
         <div className="flex flex-col items-center gap-2">
           <div>&copy; {new Date().getFullYear()} Maud Kusters. All rights reserved.</div>
-          <a
-            href="/auth/login"
-            className="text-gray-500 hover:text-[#6a5cff] text-xs transition-colors duration-200 cursor-pointer"
-          >
-            Admin
-          </a>
+          <AuthAwareAdminLink />
         </div>
       </footer>
     </div>

@@ -176,12 +176,12 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
             <p className="text-gray-300 mt-2">Welcome back, {user.email}</p>
           </div>
           <div className="flex gap-4">
-            <button
-              onClick={() => router.push('/')}
+            <a
+              href="/"
               className="px-4 py-2 text-gray-300 hover:text-white transition-colors cursor-pointer"
             >
               ← Back to Portfolio
-            </button>
+            </a>
             <button
               onClick={handleSignOut}
               className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors cursor-pointer"
