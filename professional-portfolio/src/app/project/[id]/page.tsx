@@ -1,7 +1,10 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import type { Database } from '@/lib/types/database.types';
+import { createClient } from '@/lib/supabase/client';
 
 type Project = Database['public']['Tables']['projects']['Row'];
 
@@ -11,31 +14,53 @@ interface ProjectPageProps {
   }>;
 }
 
-async function getProject(id: string): Promise<Project | null> {
-  try {
-    const supabase = await createClient();
-    
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('id', id)
-      .single();
+export default function ProjectPage({ params }: ProjectPageProps) {
+  const [project, setProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(true);
 
-    if (error) {
-      console.error('Error fetching project:', error);
-      return null;
+  useEffect(() => {
+    async function fetchProject() {
+      const resolvedParams = await params;
+      
+      try {
+        const supabase = createClient();
+        
+        if (!supabase) {
+          console.error('Supabase client not available');
+          setProject(null);
+          return;
+        }
+        
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('id', resolvedParams.id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching project:', error);
+          setProject(null);
+        } else {
+          setProject(data);
+        }
+      } catch (error) {
+        console.error('Supabase not configured or error:', error);
+        setProject(null);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    return data;
-  } catch (error) {
-    console.error('Supabase not configured or error:', error);
-    return null;
-  }
-}
+    fetchProject();
+  }, [params]);
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
-  const resolvedParams = await params;
-  const project = await getProject(resolvedParams.id);
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
 
   if (!project) {
     notFound();
@@ -82,9 +107,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {project.image_url && (
             <div className="w-full max-w-4xl mx-auto mb-8 rounded-xl overflow-hidden shadow-xl border border-[#232842]/30">
               <img 
-                src={project.image_url} 
+                src={project.image_url.startsWith('/') ? project.image_url : `/${project.image_url}`}
                 alt={`${project.title} preview`} 
-                className="w-full h-auto object-cover" 
+                className="w-full h-auto object-cover"
+                onError={(e) => {
+                  console.error('Image failed to load:', project.image_url);
+                  // Try alternative paths
+                  const img = e.target as HTMLImageElement;
+                  if (project.image_url && !img.src.includes('/images/')) {
+                    img.src = `/images/${project.image_url.replace(/^\/+/, '')}`;
+                  }
+                }}
               />
             </div>
           )}
@@ -154,21 +187,4 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </main>
     </div>
   );
-}
-
-// Generate metadata for SEO
-export async function generateMetadata({ params }: ProjectPageProps) {
-  const resolvedParams = await params;
-  const project = await getProject(resolvedParams.id);
-
-  if (!project) {
-    return {
-      title: 'Project Not Found',
-    };
-  }
-
-  return {
-    title: `${project.title} - Maud Kusters`,
-    description: project.description,
-  };
 }
