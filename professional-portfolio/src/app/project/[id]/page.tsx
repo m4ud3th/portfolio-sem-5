@@ -67,6 +67,33 @@ export default function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
+  // Function to normalize and validate image URLs
+  const getValidImageUrl = (imageUrl: string | null): string => {
+    if (!imageUrl) return '/images/2b-green.png';
+    
+    try {
+      // Normalize the path: replace backslashes with forward slashes
+      let normalizedPath = imageUrl.replace(/\\/g, '/');
+      
+      // Ensure it starts with a forward slash for absolute paths
+      if (!normalizedPath.startsWith('/') && !normalizedPath.startsWith('http')) {
+        normalizedPath = `/${normalizedPath}`;
+      }
+      
+      // Test if it's a valid URL structure for Next.js Image
+      if (normalizedPath.startsWith('/')) {
+        return normalizedPath;
+      }
+      
+      // If it's an external URL, validate it
+      new URL(normalizedPath);
+      return normalizedPath;
+    } catch (error) {
+      console.error('Invalid image URL:', imageUrl, error);
+      return '/images/2b-green.png'; // Fallback to default image
+    }
+  };
+
   return (
     <div className="min-h-screen font-sans flex flex-col bg-black relative overflow-x-hidden">
       {/* Grungy Texture Overlay */}
@@ -108,14 +135,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
           {project.image_url && (
             <div className="w-full max-w-4xl mx-auto mb-8 rounded-xl overflow-hidden shadow-xl border border-[#232842]/30">
               <Image
-                src={(() => {
-                  // Normalize the path: replace backslashes with forward slashes and ensure leading slash
-                  let normalizedPath = project.image_url.replace(/\\/g, '/');
-                  if (!normalizedPath.startsWith('/')) {
-                    normalizedPath = `/${normalizedPath}`;
-                  }
-                  return normalizedPath;
-                })()}
+                src={getValidImageUrl(project.image_url)}
                 alt={`${project.title} preview`}
                 width={1200}
                 height={600}
