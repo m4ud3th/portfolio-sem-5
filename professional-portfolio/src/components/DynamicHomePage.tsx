@@ -121,8 +121,15 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
             {displayProjects.map((project, index) => (
               <div 
                 key={project.id} 
-                className="rounded-2xl overflow-hidden shadow-xl border border-[#232842]/30 bg-[#181b23] flex flex-col h-full transition-all duration-300 hover:scale-[1.025] hover:shadow-2xl hover:border-[#6a5cff]/30 group animate-fade-in-up"
+                className="rounded-2xl overflow-hidden shadow-xl border border-[#232842]/30 bg-[#181b23] flex flex-col h-full transition-all duration-300 hover:scale-[1.025] hover:shadow-2xl hover:border-[#6a5cff]/30 group animate-fade-in-up cursor-pointer"
                 style={{animationDelay: `${0.1 * index}s`}}
+                onClick={(e) => {
+                  // Only navigate if the click wasn't on a button or link
+                  const target = e.target as HTMLElement;
+                  if (!target.closest('a') && !target.closest('button')) {
+                    router.push(getProjectUrl(project));
+                  }
+                }}
               >
                 {/* Card Header with Icon - Fixed Height */}
                 <div className="flex items-center gap-2 px-5 pt-5 pb-3 w-full h-[5rem]">
@@ -131,9 +138,9 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 3.75v16.5m-9-16.5v16.5M3.75 7.5h16.5m-16.5 9h16.5" />
                     </svg>
                   </span>
-                  <Link href={getProjectUrl(project)} className="flex-1 h-full flex items-center">
-                    <h4 className="font-semibold text-lg text-white tracking-wide hover:text-[#6a5cff] transition-colors duration-200 cursor-pointer leading-tight">{project.title}</h4>
-                  </Link>
+                  <div className="flex-1 h-full flex items-center">
+                    <h4 className="font-semibold text-lg text-white tracking-wide hover:text-[#6a5cff] transition-colors duration-200 leading-tight">{project.title}</h4>
+                  </div>
                 </div>
                 {/* Image Section - Fixed Height */}
                 <div className="w-full h-[200px] bg-[#232842]/20 flex items-center justify-center overflow-hidden relative">
@@ -172,6 +179,7 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
                     <Link
                       href={getProjectUrl(project)}
                       className="flex-1 text-center border border-[#6a5cff] text-white font-medium rounded px-3 py-2 bg-[#232842]/30 hover:bg-[#6a5cff]/67 hover:text-white hover:scale-105 transition-all duration-200 text-sm shadow-sm tracking-wide cursor-pointer"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       View Details
                     </Link>
@@ -181,6 +189,7 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
                         className="flex-1 text-center border border-green-500 text-green-300 font-medium rounded px-3 py-2 bg-[#232842]/30 hover:bg-green-600 hover:text-white hover:scale-105 transition-all duration-200 text-sm shadow-sm tracking-wide cursor-pointer"
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         Live Demo
                       </a>
@@ -191,6 +200,7 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
                         className="flex-1 text-center border border-gray-500 text-gray-300 font-medium rounded px-3 py-2 bg-[#232842]/30 hover:bg-gray-600 hover:text-white hover:scale-105 transition-all duration-200 text-sm shadow-sm tracking-wide cursor-pointer"
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         GitHub
                       </a>
