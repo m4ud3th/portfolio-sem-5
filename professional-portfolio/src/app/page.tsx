@@ -3,6 +3,9 @@ import { getFeaturedProjects } from '@/lib/actions/projects';
 import DynamicHomePage from '@/components/DynamicHomePage';
 import type { Database } from '@/lib/types/database.types';
 
+// Force dynamic rendering since we're using Supabase with cookies
+export const dynamic = 'force-dynamic';
+
 type Project = Database['public']['Tables']['projects']['Row'];
 
 export default async function Home() {
