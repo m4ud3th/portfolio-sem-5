@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Database } from '@/lib/types/database.types';
 import { createClient } from '@/lib/supabase/client';
 
@@ -106,17 +107,15 @@ export default function ProjectPage({ params }: ProjectPageProps) {
           {/* Project Image */}
           {project.image_url && (
             <div className="w-full max-w-4xl mx-auto mb-8 rounded-xl overflow-hidden shadow-xl border border-[#232842]/30">
-              <img 
+              <Image
                 src={project.image_url.startsWith('/') ? project.image_url : `/${project.image_url}`}
-                alt={`${project.title} preview`} 
+                alt={`${project.title} preview`}
+                width={1200}
+                height={600}
                 className="w-full h-auto object-cover"
+                priority
                 onError={(e) => {
                   console.error('Image failed to load:', project.image_url);
-                  // Try alternative paths
-                  const img = e.target as HTMLImageElement;
-                  if (project.image_url && !img.src.includes('/images/')) {
-                    img.src = `/images/${project.image_url.replace(/^\/+/, '')}`;
-                  }
                 }}
               />
             </div>
