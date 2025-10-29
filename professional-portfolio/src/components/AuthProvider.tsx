@@ -19,6 +19,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Only run auth logic in the browser, never during server-side rendering
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+
     const supabase = createClient();
     if (!supabase) {
       setLoading(false);

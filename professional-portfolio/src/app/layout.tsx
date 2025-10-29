@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Staatliches } from "next/font/google";
-import { AuthProvider } from "@/components/AuthProvider";
+import ClientAuthProvider from "@/components/ClientAuthProvider";
 import "./globals.css";
-
-// Force dynamic rendering to avoid server-side cookie issues
-export const dynamic = 'force-dynamic';
 
 
 const geistSans = Geist({
@@ -39,9 +36,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${staatliches.variable} antialiased`}
       >
-        <AuthProvider>
+        <ClientAuthProvider>
           {children}
-        </AuthProvider>
+        </ClientAuthProvider>
       </body>
     </html>
   );
