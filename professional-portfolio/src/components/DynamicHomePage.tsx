@@ -82,6 +82,33 @@ export default function DynamicHomePage({ projects: initialProjects }: DynamicHo
 
   const displayProjects = (loading || projects.length === 0) ? [staticProject] : projects;
 
+  // Function to normalize and validate image URLs
+  const getValidImageUrl = (imageUrl: string | null): string => {
+    if (!imageUrl) return '/images/2b-green.png';
+    
+    try {
+      // Normalize the path: replace backslashes with forward slashes
+      let normalizedPath = imageUrl.replace(/\\/g, '/');
+      
+      // Ensure it starts with a forward slash for absolute paths
+      if (!normalizedPath.startsWith('/') && !normalizedPath.startsWith('http')) {
+        normalizedPath = `/${normalizedPath}`;
+      }
+      
+      // Test if it's a valid URL structure for Next.js Image
+      if (normalizedPath.startsWith('/')) {
+        return normalizedPath;
+      }
+      
+      // If it's an external URL, validate it
+      new URL(normalizedPath);
+      return normalizedPath;
+    } catch (error) {
+      console.error('Invalid image URL:', imageUrl, error);
+      return '/images/2b-green.png'; // Fallback to default image
+    }
+  };
+
   // Function to truncate description text
   const truncateDescription = (text: string, maxLength: number = 100) => {
     if (text.length <= maxLength) return text;
@@ -174,7 +201,7 @@ export default function DynamicHomePage({ projects: initialProjects }: DynamicHo
                 {/* Image Section - Fixed Height */}
                 <div className="w-full h-[200px] bg-[#232842]/20 flex items-center justify-center overflow-hidden relative">
                   <Image
-                    src={project.image_url || '/images/2b-green.png'} 
+                    src={getValidImageUrl(project.image_url)} 
                     alt={`${project.title} preview`} 
                     width={400}
                     height={200}
