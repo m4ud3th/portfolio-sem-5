@@ -52,6 +52,12 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
 
   const displayProjects = projects.length > 0 ? projects : [staticProject];
 
+  // Function to truncate description text
+  const truncateDescription = (text: string, maxLength: number = 100) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength).trim() + '...';
+  };
+
   return (
     <div className="min-h-screen font-sans flex flex-col bg-black relative overflow-x-hidden scroll-smooth">
       {/* Grungy Texture Overlay */}
@@ -110,25 +116,26 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
           <div className="animate-fade-in-up">
             <h3 className="text-3xl font-black mb-10 text-white text-center tracking-widest uppercase border-b-2 border-[#232842]/40 pb-4 hover:text-[#6a5cff] transition-colors duration-300">Featured Projects</h3>
           </div>
-          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
+          <div className="project-grid">
             {displayProjects.map((project, index) => (
               <div 
                 key={project.id} 
-                className="rounded-2xl overflow-hidden shadow-xl border border-[#232842]/30 bg-[#181b23] flex flex-col transition-all duration-300 hover:scale-[1.025] hover:shadow-2xl hover:border-[#6a5cff]/30 group animate-fade-in-up"
+                className="rounded-2xl overflow-hidden shadow-xl border border-[#232842]/30 bg-[#181b23] flex flex-col h-full transition-all duration-300 hover:scale-[1.025] hover:shadow-2xl hover:border-[#6a5cff]/30 group animate-fade-in-up"
                 style={{animationDelay: `${0.1 * index}s`}}
               >
-                {/* Card Header with Icon */}
-                <div className="flex items-center gap-2 px-5 pt-5 pb-2 w-full">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#232842]/40 text-[#6a5cff] text-lg font-bold shadow-sm group-hover:bg-[#6a5cff]/20 group-hover:scale-110 transition-all duration-300">
+                {/* Card Header with Icon - Fixed Height */}
+                <div className="flex items-center gap-2 px-5 pt-5 pb-3 w-full h-[5rem]">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#232842]/40 text-[#6a5cff] text-lg font-bold shadow-sm group-hover:bg-[#6a5cff]/20 group-hover:scale-110 transition-all duration-300 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 3.75v16.5m-9-16.5v16.5M3.75 7.5h16.5m-16.5 9h16.5" />
                     </svg>
                   </span>
-                  <Link href={getProjectUrl(project)}>
-                    <h4 className="font-semibold text-lg text-white tracking-wide hover:text-[#6a5cff] transition-colors duration-200 cursor-pointer">{project.title}</h4>
+                  <Link href={getProjectUrl(project)} className="flex-1 h-full flex items-center">
+                    <h4 className="font-semibold text-lg text-white tracking-wide hover:text-[#6a5cff] transition-colors duration-200 cursor-pointer leading-tight">{project.title}</h4>
                   </Link>
                 </div>
-                <div className="w-full aspect-[4/3] bg-[#232842]/20 flex items-center justify-center overflow-hidden relative">
+                {/* Image Section - Fixed Height */}
+                <div className="w-full h-[200px] bg-[#232842]/20 flex items-center justify-center overflow-hidden relative">
                   <img 
                     src={project.image_url || '/images/2b-green.png'} 
                     alt={`${project.title} preview`} 
@@ -138,22 +145,27 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
                 </div>
                 <div className="flex-1 flex flex-col items-start px-5 py-4 w-full">
                   <div className="border-b border-[#232842]/30 w-full mb-3" />
-                  <p className="text-gray-300 text-sm mb-3">{project.description}</p>
+                  {/* Description - Fixed Height */}
+                  <div className="h-[4.2rem] mb-3">
+                    <p className="text-gray-300 text-sm line-clamp-3">{truncateDescription(project.description)}</p>
+                  </div>
                   
-                  {/* Technologies */}
-                  {project.technologies.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {project.technologies.map((tech, index) => (
-                        <span 
-                          key={index} 
-                          className="px-2 py-1 bg-[#232842]/40 text-gray-300 text-xs rounded hover:bg-[#6a5cff]/20 hover:text-[#6a5cff] transition-all duration-200 cursor-default"
-                          style={{animationDelay: `${0.1 * index}s`}}
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  {/* Technologies - Fixed Height Area */}
+                  <div className="min-h-[3rem] mb-4 flex items-start">
+                    {project.technologies.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {project.technologies.map((tech, index) => (
+                          <span 
+                            key={index} 
+                            className="px-2 py-1 bg-[#232842]/40 text-gray-300 text-xs rounded hover:bg-[#6a5cff]/20 hover:text-[#6a5cff] transition-all duration-200 cursor-default"
+                            style={{animationDelay: `${0.1 * index}s`}}
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
                   <div className="flex gap-2 w-full">
                     <Link
