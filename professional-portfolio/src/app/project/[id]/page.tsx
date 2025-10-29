@@ -108,7 +108,14 @@ export default function ProjectPage({ params }: ProjectPageProps) {
           {project.image_url && (
             <div className="w-full max-w-4xl mx-auto mb-8 rounded-xl overflow-hidden shadow-xl border border-[#232842]/30">
               <Image
-                src={project.image_url.startsWith('/') ? project.image_url : `/${project.image_url}`}
+                src={(() => {
+                  // Normalize the path: replace backslashes with forward slashes and ensure leading slash
+                  let normalizedPath = project.image_url.replace(/\\/g, '/');
+                  if (!normalizedPath.startsWith('/')) {
+                    normalizedPath = `/${normalizedPath}`;
+                  }
+                  return normalizedPath;
+                })()}
                 alt={`${project.title} preview`}
                 width={1200}
                 height={600}
