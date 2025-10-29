@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthAwareAdminLink from './AuthAwareAdminLink';
 import { getProjectUrl } from '@/lib/utils/project';
+import { createClient } from '@/lib/supabase/client';
 import type { Database } from '@/lib/types/database.types';
 
 type Project = Database['public']['Tables']['projects']['Row'];
@@ -13,9 +14,36 @@ interface DynamicHomePageProps {
   projects: Project[];
 }
 
-export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function DynamicHomePage({ projects: initialProjects }: DynamicHomePageProps) {
   const router = useRouter();
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch projects client-side to avoid server-side cookie issues
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const supabase = createClient();
+        if (supabase) {
+          const { data, error } = await supabase
+            .from('projects')
+            .select('*')
+            .eq('featured', true)
+            .order('created_at', { ascending: false });
+
+          if (!error && data) {
+            setProjects(data);
+          }
+        }
+      } catch (error) {
+        console.log('Database not connected yet, using static data', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProjects();
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -51,7 +79,7 @@ export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
     user_id: ''
   };
 
-  const displayProjects = projects.length > 0 ? projects : [staticProject];
+  const displayProjects = (loading || projects.length === 0) ? [staticProject] : projects;
 
   // Function to truncate description text
   const truncateDescription = (text: string, maxLength: number = 100) => {
