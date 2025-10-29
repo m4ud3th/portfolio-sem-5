@@ -4,6 +4,9 @@ import { Staatliches } from "next/font/google";
 import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
 
+// Force dynamic rendering to avoid server-side cookie issues
+export const dynamic = 'force-dynamic';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
