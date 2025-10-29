@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -33,7 +33,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   const isConfigured = isSupabaseConfigured();
   const supabase = isConfigured ? createClient() : null;
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     if (!supabase) return;
     try {
       const { data, error } = await supabase
@@ -48,13 +48,13 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
 
   useEffect(() => {
     if (isConfigured && supabase) {
       fetchProjects();
     }
-  }, [isConfigured, supabase]);
+  }, [isConfigured, supabase, fetchProjects]);
 
   // If Supabase is not configured, show setup message
   if (!isConfigured || !supabase) {

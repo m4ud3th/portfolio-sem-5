@@ -6,9 +6,9 @@ import type { Database } from '@/lib/types/database.types';
 type Project = Database['public']['Tables']['projects']['Row'];
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 async function getProject(id: string): Promise<Project | null> {
@@ -34,7 +34,8 @@ async function getProject(id: string): Promise<Project | null> {
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
-  const project = await getProject(params.id);
+  const resolvedParams = await params;
+  const project = await getProject(resolvedParams.id);
 
   if (!project) {
     notFound();
@@ -157,7 +158,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: ProjectPageProps) {
-  const project = await getProject(params.id);
+  const resolvedParams = await params;
+  const project = await getProject(resolvedParams.id);
 
   if (!project) {
     return {
