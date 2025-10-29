@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function StaticProjectPage() {
   const project = {
@@ -48,9 +49,11 @@ export default function StaticProjectPage() {
 
           {/* Project Image */}
           <div className="w-full max-w-4xl mx-auto mb-8 rounded-xl overflow-hidden shadow-xl border border-[#232842]/30">
-            <img 
+            <Image
               src={project.image_url} 
               alt={`${project.title} preview`} 
+              width={1200}
+              height={600}
               className="w-full h-auto object-cover" 
             />
           </div>

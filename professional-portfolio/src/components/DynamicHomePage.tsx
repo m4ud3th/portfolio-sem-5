@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import AuthAwareAdminLink from './AuthAwareAdminLink';
 import { getProjectUrl } from '@/lib/utils/project';
 import { createClient } from '@/lib/supabase/client';
@@ -172,9 +173,11 @@ export default function DynamicHomePage({ projects: initialProjects }: DynamicHo
                 </div>
                 {/* Image Section - Fixed Height */}
                 <div className="w-full h-[200px] bg-[#232842]/20 flex items-center justify-center overflow-hidden relative">
-                  <img 
+                  <Image
                     src={project.image_url || '/images/2b-green.png'} 
                     alt={`${project.title} preview`} 
+                    width={400}
+                    height={200}
                     className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" 
                   />
                   <div className="absolute inset-0 bg-[#6a5cff]/0 group-hover:bg-[#6a5cff]/10 transition-all duration-300"></div>
