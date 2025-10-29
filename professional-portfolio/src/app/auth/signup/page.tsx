@@ -12,6 +12,7 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
   
   // Check if Supabase is configured
@@ -46,7 +47,7 @@ export default function SignupPage() {
       } else {
         setMessage('Check your email for the confirmation link!');
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);

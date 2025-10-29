@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import type { Database } from '@/lib/types/database.types';
 
@@ -17,11 +18,43 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    image_url: '',
+    project_url: '',
+    github_url: '',
+    technologies: '',
+    featured: false,
+  });
   const router = useRouter();
   
   // Check if Supabase is configured
   const isConfigured = isSupabaseConfigured();
   const supabase = isConfigured ? createClient() : null;
+
+  const fetchProjects = async () => {
+    if (!supabase) return;
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setProjects(data || []);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isConfigured && supabase) {
+      fetchProjects();
+    }
+  }, [isConfigured, supabase]);
 
   // If Supabase is not configured, show setup message
   if (!isConfigured || !supabase) {
@@ -45,38 +78,8 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
     );
   }
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    image_url: '',
-    project_url: '',
-    github_url: '',
-    technologies: '',
-    featured: false,
-  });
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setProjects(data || []);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSignOut = async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
     router.push('/');
     router.refresh();
@@ -176,12 +179,12 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
             <p className="text-gray-300 mt-2">Welcome back, {user.email}</p>
           </div>
           <div className="flex gap-4">
-            <a
+            <Link
               href="/"
               className="px-4 py-2 text-gray-300 hover:text-white transition-colors cursor-pointer"
             >
               ← Back to Portfolio
-            </a>
+            </Link>
             <button
               onClick={handleSignOut}
               className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors cursor-pointer"

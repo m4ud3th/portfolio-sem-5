@@ -14,6 +14,7 @@ interface DynamicHomePageProps {
 }
 
 export default function DynamicHomePage({ projects }: DynamicHomePageProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
 
   useEffect(() => {

@@ -8,7 +8,7 @@ export default function ProjectNotFound() {
           Project Not Found
         </h1>
         <p className="text-gray-300 mb-6">
-          The project you're looking for doesn't exist or has been removed.
+          The project you&apos;re looking for doesn&apos;t exist or has been removed.
         </p>
         <Link
           href="/"

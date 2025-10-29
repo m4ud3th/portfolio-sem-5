@@ -16,7 +16,7 @@ export default async function AdminPage() {
     }
 
     return <AdminDashboard user={user} />;
-  } catch (error) {
+  } catch {
     // If Supabase is not configured, show setup message
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-[#181a20] to-[#232842] flex items-center justify-center px-4">
